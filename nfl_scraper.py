@@ -156,40 +156,30 @@ c = conn.cursor()
 
 #create a new table if it doesn't exist already
 c.execute("""CREATE TABLE IF NOT EXISTS player_stats (
-	id integer primary key autoincrement, 
 	name varchar(255) not null, team varchar(7) not null,
 	position varchar(7) not null, pass_yds int default 0,
 	pass_tds int default 0, pass_ints int default 0, 
 	rush_yds int default 0, rush_tds int default 0, 
 	rush_fums int default 0, rec_yds int default 0, 
 	rec_tds int default 0, fg_made int default 0, 
-	fg_missed int default 0, xp_made int default 0, 
-	xp_missed int default 0, def_sacks int default 0, def_safeties int default 0, 
-	def_ints int default 0, def_fums int default 0);""")
+	xp_made int default 0, def_sacks int default 0,  
+	def_safeties int default 0, def_ints int default 0, 
+	def_fums int default 0, def_tds int default 0);""")
 
 
 #update all 
 for de in data_entries_cl:
-	c.execute("""INSERT OR IGNORE INTO player_stats VALUES(1, "{de[0]}","{de[1]}","{de[2]}","{de[3]}","{de[4]}","{de[5]}","{de[6]}","{de[7]}","{de[8]}","{de[9]}","{de[10]}","{de[11]}","{de[12]}","{de[13]}","{de[14]}","{de[15]}","{de[16]}","{de[17]}","{de[18]}") 
-		
-		""")
-	c.execute("""UPDATE player_stats SET
-		pass_yds = "{de[3]}",
-		pass_tds = "{de[4]}", 
-		pass_ints = "{de[5]}", 
-		rush_yds = "{de[6]}", 
-		rush_tds = "{de[7]}", 
-		rush_fums = "{de[8]}", 
-		rec_yds = "{de[9]}", 
-		rec_tds = "{de[10]}", 
-		fg_made = "{de[11]}", 
-		fg_missed = "{de[12]}", 
-		xp_made = "{de[13]}", 
-		xp_missed = "{de[14]}", 
-		def_sacks = "{de[15]}", 
-		def_safeties = "{de[16]}", 
-		def_ints = "{de[17]}", 
-		def_fums = "{de[18]}" """)
+	print(*de)
+
+	sql_statement = """ INSERT OR IGNORE INTO player_stats(rowid, name, team, position, pass_yds,pass_tds, pass_ints, rush_yds, rush_tds, rush_fums, rec_yds, rec_tds, fg_made, xp_made, def_sacks, def_safeties, def_ints, def_fums, def_tds) 
+						VALUES(null, "{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}");""".format(*de)
+	
+	print(sql_statement)
+	
+	conn.execute(sql_statement)
+	
+	
+
 
 conn.commit()
 conn.close()
